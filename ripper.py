@@ -1,4 +1,4 @@
-import os.path
+import os.path, shutil
 
 # All the types of elements
 class combobreak_sound:
@@ -288,13 +288,22 @@ options = {combobreak_sound : combobreak_sound(),
 			ui : ui()
 			}
 
-def file_exist(element_type):
-	for key, value in element_type.items():
+# src : folder of skin we want to copy from
+# dst : folder of skin we want to copy to
+# element_name : class name of what we want to copy, must be one of the keys in options
+def transfer_files(src, dst, element_name):
+	element_class = options[element_name]
+	# iterate through all of the class 'files' 
+	for attr, value in element_class.__dict__.iteritems():
+		# check if src folder contains all files, if not then delete the files that the src does not contain in the dst folder
+		# in the case that src doesnt have HD element but dst does
 		if(not os.path.isfile(value)):
-			element_type.key = None;
-	return element_type
+			remove(dst + "/" + value)
+		else: 
+			copyfile(src + "/" + value, dst + "/" + value)
 
-def transfer_files(src, dst, element_type):
-	for attr, value in element_type.__dict__.iteritems():
-		if value is not None:
-			shutil.copyfile(src + "/" + value, dst + "/" + value)
+# create an entirely new skin to copy elements to, copies a base skin first
+# should always be called so that skins don't get overwritten
+def safe_copy(src, dst, element_name):
+	copytree(src, dst)
+	transfer_files(src, dst, element_name)
