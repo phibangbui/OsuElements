@@ -298,12 +298,12 @@ def transfer_files(src, dst, element_name):
 		# check if src folder contains all files, if not then delete the files that the src does not contain in the dst folder
 		# in the case that src doesnt have HD element but dst does
 		if(not os.path.isfile(value)):
-			remove(dst + "/" + value)
+			shutil.remove(dst + "/" + value)
 		else: 
-			copyfile(src + "/" + value, dst + "/" + value)
+			shutil.copyfile(src + "/" + value, dst + "/" + value)
 
 # create an entirely new skin to copy elements to, copies a base skin first
 # should always be called so that skins don't get overwritten
 def safe_copy(src, dst, element_name):
-	copytree(src, dst)
+	shutil.copytree(src, dst)
 	transfer_files(src, dst, element_name)
