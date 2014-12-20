@@ -292,19 +292,9 @@ def file_exist(element_type):
 	for key, value in element_type.items():
 		if(not os.path.isfile(value)):
 			element_type.key = None;
+	return element_type
 
 def transfer_files(src, dst, element_type):
-	return	
-	
-
-
-
-
-
-
-
-
-
-
-
-
+	for attr, value in element_type.__dict__.iteritems():
+		if value is not None:
+			shutil.copyfile(src + "/" + value, dst + "/" + value)
