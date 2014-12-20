@@ -310,7 +310,7 @@ def safe_copy(src, dst, skinname):
 	shutil.copytree(src, dst)
 	#Create temp file
 	fh, abs_path = mkstemp()
-	new_file = open(abs_path,'w')
+	new_file = open(dst + "/skin.ini",'w')
 	old_file = open(src + "/skin.ini")
 	for line in old_file:
 		if 'Name: ' in line:
@@ -321,3 +321,6 @@ def safe_copy(src, dst, skinname):
 			new_file.write('Author: OsuElements\n')
 		else:
 			new_file.write(line)
+	new_file.close()
+	close(fh)
+	old_file.close()
