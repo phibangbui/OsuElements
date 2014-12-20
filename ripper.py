@@ -1,4 +1,5 @@
-import os.path, shutil
+import os.path, shutil, tempfile
+
 
 # All the types of elements
 class combobreak_sound:
@@ -297,13 +298,26 @@ def transfer_files(src, dst, element_name):
 	for attr, value in element_class.__dict__.iteritems():
 		# check if src folder contains all files, if not then delete the files that the src does not contain in the dst folder
 		# in the case that src doesnt have HD element but dst does
-		if(not os.path.isfile(value)):
+		if(not os.path.isfile(src + "/" + value)):
 			shutil.remove(dst + "/" + value)
 		else: 
 			shutil.copyfile(src + "/" + value, dst + "/" + value)
 
 # create an entirely new skin to copy elements to, copies a base skin first
+# rewrites the skin.ini to change the name/version/author
 # should always be called so that skins don't get overwritten
-def safe_copy(src, dst, element_name):
+def safe_copy(src, dst, skinname):
 	shutil.copytree(src, dst)
-	transfer_files(src, dst, element_name)
+	#Create temp file
+	fh, abs_path = mkstemp()
+	new_file = open(abs_path,'w')
+	old_file = open(src + "/skin.ini")
+	for line in old_file:
+		if 'Name: ' in line:
+			new_file.write('Name: ' + skin_name + '\n')
+		elif 'Version: ' in line:
+			new_file.write('Version: 1\n')
+		elif 'Author: ' in line:
+			new_file.write('Author: OsuElements\n')
+		else:
+			new_file.write(line)
