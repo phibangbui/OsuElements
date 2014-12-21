@@ -320,7 +320,7 @@ def safe_copy(src, dst, skinname):
 	old_file = open(src + "/skin.ini")
 	for line in old_file:
 		if 'Name: ' in line:
-			new_file.write('Name: ' + skin_name + '\n')
+			new_file.write('Name: ' + skinname + '\n')
 		elif 'Version: ' in line:
 			new_file.write('Version: 1\n')
 		elif 'Author: ' in line:
@@ -339,10 +339,17 @@ def start_point():
 
 def select_1():
 	print ('Creating a new skin from a base skin selected\n')
-	src = raw_input('Please enter the  foldername of the skin you want to rip: ')
+	skinlist = [f for f in os.listdir('.') if not os.path.isfile(f)]
+	select_1_skinchoice = {}
+	skin_list = ""
+	for i, skin in enumerate(skinlist):
+		skin_list += '[' + str(i + 1) + '] : ' + skin + ' \n'
+		select_1_skinchoice[str(i + 1)] = skin	
+	src = raw_input('Please enter the  foldername of the skin you want to rip: \n' +
+			skin_list)
 	dst = raw_input('Please enter the foldername of the new skin to live in: ')
 	skinname = raw_input('Please give the new skin a name!: ')
-	safe_copy(src, dst, skinname)
+	safe_copy(select_1_skinchoice[src], dst, skinname)
 	post_copy_select = raw_input("annnnnd it's done, what would you like to do now\n"
 		"[1] Let me start copying elements from other skins into my newly made skin\n"
 		"[2] Bring me back to the start menu\n"
@@ -357,12 +364,19 @@ def select_1():
 		print 'bro you didnt even enter anything valid... bringing you back to the home screen\n'
 		start_point()
 		
-
 def select_2():
 	print ('Copying elements from an existing skin to another skin selected\n')
-	src = raw_input('Please enter the foldername of the skin you want to rip from: ')
-	dst = raw_input('Please enter the foldername of the skin you want to replace elements to: ')
-	select_2_elementselect(src, dst)
+	skinlist = [f for f in os.listdir('.') if not os.path.isfile(f)]
+	select_2_skinchoice = {}
+	skin_list = ""
+	for i, skin in enumerate(skinlist):
+		skin_list += '[' + str(i + 1) + '] : ' + skin + ' \n'
+		select_2_skinchoice[str(i + 1)] = skin	
+	src = raw_input('Please enter the foldername of the skin you want to rip from: \n' +
+			skin_list)
+	dst = raw_input('Please enter the foldername of the skin you want to replace elements to: \n' +
+			skin_list)
+	select_2_elementselect(select_2_skinchoice[src], select_2_skinchoice[dst])
 	
 def select_2_elementselect(src, dst):
 	element_name = raw_input('Select from one of the following element_types: \n' +
@@ -389,28 +403,41 @@ def select_2_elementselect(src, dst):
 		'15' : pause_background, '16' : rank_screen, '17' : ui
 		}
 	element_type = menuchoice2[element_name]
-	transfer_files(src, dst, element_type)
-	go_again = raw_input('Copied! would you like to copy more elements from this skin?\n'
-			     '[1] Yes, give me the element choice selection screen again\n'
-			     '[2] No, but i would like to rip elements from another skin\n'
-			     '[3] No, and i would like to quit the program\n'
-			     )
-	if (go_again == '1'):
+	confirm_element(src, dst, element_type)
+
+def confirm_element(src, dst, element_type):
+	confirm = raw_input('Are you sure you want to copy this element?\n' +
+			'[1] Yes, copy it!\n' +
+			'[2] No, Bring me back to the element select screen\n'
+			'[3] Preview Element\n')
+	if (confirm == '1'):
+		transfer_files(src, dst, element_type)
+		go_again = raw_input('Copied! would you like to copy more elements from this skin?\n' +
+			     '[1] Yes, give me the element choice selection screen again\n' +
+			     '[2] No, but i would like to rip elements from another skin\n' +
+			     '[3] No, and i would like to quit the program\n')
+		if (go_again == '1'):
+			select_2_elementselect(src, dst)
+		elif (go_again == '2'):
+			select_2()
+		elif (go_again == '3'):
+			sys.exit()
+		else:
+			print 'bro you didnt even enter anything valid... bringing you back to the select screen\n'
+			select_2()
+	elif (confirm == '2'):
 		select_2_elementselect(src, dst)
-	elif (go_again == '2'):
-		select_2()
-	elif (go_again == '3'):
-		sys.exit()
-	else:
-		print 'bro you didnt even enter anything valid... bringing you back to the select screen\n'
-		select_2()
+	elif (confirm == '3'):
+		return	
+
+def get_dirs():
+	testlist = [f for f in os.listdir('.') if not os.path.isfile(f)]
+	print testlist
 
 print ('Hello! Welcome to OsuElements Python Script! \n' +
 	"Because I didn't feel like creating a gui for this script, \n" +
 	"You can just follow the following requests in the command prompt to rip your skins! \n"
 	"- phibangbui.cs@gmail.com for any questions about the script \n")
 start_point()
-
-
-
+#get_dirs()
 
