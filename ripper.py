@@ -331,12 +331,9 @@ def safe_copy(src, dst, skinname):
 	close(fh)
 	old_file.close()
 
-
-
 def start_point():
 	selection1 = raw_input("[1] : Create a new skin from a base skin \n" +
-				"[2] : Copy elements from an existing skin to another existing skin \n" +
-				"WARNING, elements will be overwritten and lost!: ")
+				"[2] : Copy elements from an existing skin to another existing skin (WARNING, elements will be overwritten and lost!)\n ")
 	menuchoice1 = {'1' : select_1, '2' : select_2}
 	menuchoice1[selection1]()
 
@@ -410,7 +407,8 @@ def select_2_elementselect(src, dst):
 
 print ('Hello! Welcome to OsuElements Python Script! \n' +
 	"Because I didn't feel like creating a gui for this script, \n" +
-	"You can just follow the following requests in the command prompt to rip your skins! \n")
+	"You can just follow the following requests in the command prompt to rip your skins! \n"
+	"- phibangbui.cs@gmail.com for any questions about the script \n")
 start_point()
 
 
