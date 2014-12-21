@@ -430,14 +430,9 @@ def confirm_element(src, dst, element_type):
 	elif (confirm == '3'):
 		return	
 
-def get_dirs():
-	testlist = [f for f in os.listdir('.') if not os.path.isfile(f)]
-	print testlist
-
 print ('Hello! Welcome to OsuElements Python Script! \n' +
 	"Because I didn't feel like creating a gui for this script, \n" +
 	"You can just follow the following requests in the command prompt to rip your skins! \n"
 	"- phibangbui.cs@gmail.com for any questions about the script \n")
 start_point()
-#get_dirs()
 
