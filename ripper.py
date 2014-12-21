@@ -1,5 +1,9 @@
-import os.path, shutil, tempfile
-
+import shutil
+from tempfile import mkstemp
+from shutil import move
+from os import remove, close, path
+import os
+import sys
 
 # All the types of elements
 class combobreak_sound:
@@ -269,7 +273,6 @@ class ui:
 		self.selectiontg = 'selection-mod-target.png'
 		self.selectiontgHD = 'selection-mod-target@2x.png'
 
-
 options = {combobreak_sound : combobreak_sound(),
 			comboburst : comboburst(),
 			comboburst_pic : comboburst_pic(),
@@ -299,7 +302,10 @@ def transfer_files(src, dst, element_name):
 		# check if src folder contains all files, if not then delete the files that the src does not contain in the dst folder
 		# in the case that src doesnt have HD element but dst does
 		if(not os.path.isfile(src + "/" + value)):
-			shutil.remove(dst + "/" + value)
+			if(not os.path.isfile(dst + "/" + value)):
+				continue
+			else:
+				os.remove(dst + "/" + value)
 		else: 
 			shutil.copyfile(src + "/" + value, dst + "/" + value)
 
@@ -324,3 +330,89 @@ def safe_copy(src, dst, skinname):
 	new_file.close()
 	close(fh)
 	old_file.close()
+
+
+
+def start_point():
+	selection1 = raw_input("[1] : Create a new skin from a base skin \n" +
+				"[2] : Copy elements from an existing skin to another existing skin \n" +
+				"WARNING, elements will be overwritten and lost!: ")
+	menuchoice1 = {'1' : select_1, '2' : select_2}
+	menuchoice1[selection1]()
+
+def select_1():
+	print ('Creating a new skin from a base skin selected\n')
+	src = raw_input('Please enter the  foldername of the skin you want to rip: ')
+	dst = raw_input('Please enter the foldername of the new skin to live in: ')
+	skinname = raw_input('Please give the new skin a name!: ')
+	safe_copy(src, dst, skinname)
+	post_copy_select = raw_input("annnnnd it's done, what would you like to do now\n"
+		"[1] Let me start copying elements from other skins into my newly made skin\n"
+		"[2] Bring me back to the start menu\n"
+		"[3] Exit\n")
+	if (post_copy_select == '1'):
+		select_2()
+	elif (post_copy_select == '2'):
+		start_point()
+	elif (post_copy_select == '3'):
+		sys.exit()
+	else:
+		print 'bro you didnt even enter anything valid... bringing you back to the home screen\n'
+		start_point()
+		
+
+def select_2():
+	print ('Copying elements from an existing skin to another skin selected\n')
+	src = raw_input('Please enter the foldername of the skin you want to rip from: ')
+	dst = raw_input('Please enter the foldername of the skin you want to replace elements to: ')
+	select_2_elementselect(src, dst)
+	
+def select_2_elementselect(src, dst):
+	element_name = raw_input('Select from one of the following element_types: \n' +
+				'[1] : Combobreak Sound \n' +
+				'[2] : Comboburst\n' +
+				'[3] : Comboburst Picture\n' +
+				'[4] : Countdown\n' +
+				'[5] : Cursor\n' +
+				'[6] : Hit Sound\n' +
+				'[7] : Follow Points\n' +
+				'[8] : Hit Score\n' +
+				'[9] : Hit Circles\n' +
+				'[10] : Input Overlay (The Z, X, Mouse1, Mouse2 counters)\n' +
+				'[11] : Menu Click Sounds\n' +
+				'[12] : Spinner\n' +
+				'[13] : Section Fail and Passes (Both sound and picture)\n' +
+				'[14] : Song Fail Background\n' +
+				'[15] : Song Pause Background\n' +
+				'[16] : Rank Screen\n' +
+				'[17] : General UI (Song select, Background, etc...)\n')
+
+	menuchoice2 = {'1' : combobreak_sound, '2' : comboburst, '3' : comboburst_pic, '4' : countdown, '5' : cursor, '6' : drum, '7' : follow_point,
+		'8' : hit_score, '9' : hit_circle, '10' : input_overlay, '11' : menu_click, '12' : spinner, '13' : section_fp, '14' : fail_background,
+		'15' : 'pause_background', '16' : 'rank_screen', '17' : 'ui'
+		}
+	element_type = menuchoice2[element_name]
+	transfer_files(src, dst, element_type)
+	go_again = raw_input('Copied! would you like to copy more elements from this skin?\n'
+			     '[1] Yes, give me the element choice selection screen again\n'
+			     '[2] No, but i would like to rip elements from another skin\n'
+			     '[3] No, and i would like to quit the program\n'
+			     )
+	if (go_again == '1'):
+		select_2_elementselect(src, dst)
+	elif (go_again == '2'):
+		select_2()
+	elif (go_again == '3'):
+		sys.exit()
+	else:
+		print 'bro you didnt even enter anything valid... bringing you back to the select screen\n'
+		select_2()
+
+print ('Hello! Welcome to OsuElements Python Script! \n' +
+	"Because I didn't feel like creating a gui for this script, \n" +
+	"You can just follow the following requests in the command prompt to rip your skins! \n")
+start_point()
+
+
+
+
