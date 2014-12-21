@@ -386,7 +386,7 @@ def select_2_elementselect(src, dst):
 
 	menuchoice2 = {'1' : combobreak_sound, '2' : comboburst, '3' : comboburst_pic, '4' : countdown, '5' : cursor, '6' : drum, '7' : follow_point,
 		'8' : hit_score, '9' : hit_circle, '10' : input_overlay, '11' : menu_click, '12' : spinner, '13' : section_fp, '14' : fail_background,
-		'15' : 'pause_background', '16' : 'rank_screen', '17' : 'ui'
+		'15' : pause_background, '16' : rank_screen, '17' : ui
 		}
 	element_type = menuchoice2[element_name]
 	transfer_files(src, dst, element_type)
